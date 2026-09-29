@@ -2,7 +2,7 @@
 
 > **專案背景**：2023年 **Coding 101 程式設計競賽** 參賽作品  
 > **開發團隊**：國立臺灣大學經濟學系（闕蕎蓁、王乙軒、林冠綺、劉庭秀、李維宸）  
-> **專案文件**：[檢視競賽簡報 (PDF)](./DonChiDon-Calorie-Tracker-Coding101-Slides.pdf?raw=true)
+> **專案文件**：[檢視競賽簡報 (PDF)](./DonChiDon-Calorie-Tracker-Coding101-Slides.pdf)
 
 ---
 
