@@ -1,42 +1,161 @@
-# Big Data and Business Analytics
+# Big Data and Business Analytics Projects
 
-本資料夾收錄國立臺灣大學「大數據與商業分析」課程中完成之商業數據分析與機器學習專案作品。
-
----
-
-## 專案一：從顧客分群到再購預測：結合 RFM 與機器學習之 LTV 分析
-
-> **專案文件**：[檢視簡報檔 (PDF)](./Customer-Segmentation-RFM-LTV-Prediction-Slides.pdf)
-
-### 專案摘要
-本專案旨在利用巨量資料分析與機器學習技術，建構完整之顧客價值分析架構。透過 RFM 模型進行顧客分群，並進一步結合預測模型評估顧客未來再購行為與顧客終身價值（LTV），協助企業制定精準行銷策略與資源分配。
-
-### 核心分析架構與功能
-* **RFM 顧客分群模型**：分析顧客之消費近期性、消費頻率與消費金額，使用 **Clustering** 區分高價值與潛力顧客。
-* **再購預測與 LTV 估算**：整合歷史交易行為特徵，建立機器學習分類模型評估顧客未來再購機率與預期 LTV。
-* **商業應用與行銷策略**：針對不同 RFM 分群制定客製化行銷方案與流失預警機制。
----
-
-## 專案二：基於文本的股價漲跌分類與預測模型分析
-
-> **專案文件**：[檢視簡報檔 (PDF)](./Text-Based-Stock-Price-Prediction-Slides.pdf)
-
-### 專案摘要
-本專案結合自然語言處理與金融文字探勘技術，透過分析新聞報導、社群討論與財報文本等非結構化資料，萃取市場情緒與關鍵語意特徵，並建立機器學習模型分類與預測個股或大盤之未來股價走勢。
-
-### 核心分析架構與功能
-* **金融文字探勘與預處理**：進行非結構化文本清理、中文分詞與向量化特徵萃取（TF-IDF / Word Embedding）。
-* **股價漲跌分類與預測模型**：對齊文本時間戳記與股票市場交易數據，運用機器學習模型預測漲跌方向。
-* **策略評估與商業價值**：分析特定市場情緒與主題對短線股價走勢之影響力，提供輔助決策參考。
+This repository contains two course projects from **Big Data and Business Analytics at National Taiwan University**, covering both **text-based financial prediction** and **customer analytics for e-commerce**.
 
 ---
 
-## 專案檔案結構
+## Project 1 — Text-Based Stock Price Prediction
 
-| 檔案名稱 | 說明 |
-|---|---|
-| [Customer-Segmentation-RFM-LTV-Prediction-Slides.pdf](./Customer-Segmentation-RFM-LTV-Prediction-Slides.pdf) | 顧客分群與 LTV 預測專案簡報 |
-| [Text-Based-Stock-Price-Prediction-Slides.pdf](./Text-Based-Stock-Price-Prediction-Slides.pdf) | 文本股價漲跌預測專案簡報 |
-| `README.md` | 本課程專案總覽文件 |
+A text classification project that explores whether social media and market-related textual information can be used to predict stock price movements.
 
+### Overview
 
+The project focuses on **Alchip Technologies (世芯-KY, 3661)**, selected because of its high discussion volume and substantial price volatility.
+
+From January 2023 to March 2025, approximately **5,230 related articles** were collected for analysis.
+
+### Data Processing
+
+Two labeling strategies were compared:
+
+- **Market-reaction labeling** — Articles were labeled as bullish, bearish, or neutral according to the stock return three days after publication.
+- **LLM-based labeling** — `Llama-3.1-8B` was used in a zero-shot setting to infer whether each article expressed a bullish, bearish, or neutral view.
+
+Chinese text was segmented using **Monpa**, followed by noise filtering and TF-IDF vectorization.
+
+Two TF-IDF approaches were evaluated:
+
+- A manually selected vocabulary based on discriminative TF-IDF scores
+- Full-vocabulary vectorization using `TfidfVectorizer`
+
+### Modeling
+
+Eight classification models were evaluated across different labeling and vectorization settings:
+
+`Naive Bayes` · `SVM` · `KNN` · `Decision Tree` · `Random Forest` · `MLP` · `XGBoost` · `Keras`
+
+A total of **32 model configurations** were compared.
+
+### Results
+
+The strongest performance came from **LLM-labeled data with full-vocabulary TF-IDF features**.
+
+Top-performing models included:
+
+- **Keras:** 92% accuracy
+- **MLP Neural Network:** 91% accuracy
+- **Linear SVM:** 91% accuracy
+
+A rolling backtest was then conducted using a linear SVM trained on the previous month's articles.
+
+The best backtesting approach achieved approximately **61.5% accuracy**, but performance was strongly biased toward predicting upward movements, resulting in low recall for downward movements.
+
+This highlighted an important distinction between **text classification performance** and **real-world predictive usefulness in financial markets**.
+
+---
+
+## Project 2 — Customer Segmentation and LTV Prediction
+
+A customer analytics framework that combines **RFM segmentation, clustering, machine learning, repurchase prediction, and Lifetime Value estimation** to support more targeted marketing decisions.
+
+### Overview
+
+Traditional RFM analysis provides a simple way to classify customers based on:
+
+- **Recency**
+- **Frequency**
+- **Monetary value**
+
+However, static RFM segmentation alone may not fully capture customer heterogeneity or future value.
+
+This project extends RFM analysis by combining **K-means clustering with predictive machine learning models** to identify customer segments, predict repurchase behavior, estimate future spending, and calculate customer Lifetime Value (LTV).
+
+### Data
+
+The analysis uses member and transaction-level data.
+
+- **Training period:** January 2022 – June 2023
+- **Prediction period:** July 2023 – February 2024
+- **Reference date:** June 30, 2023
+
+Features include:
+
+- Age and gender
+- Registration source
+- Membership level
+- Email, push-notification, and SMS settings
+- App / Web / offline purchasing channels
+- Purchase amount
+- Payment method
+- Discount usage
+
+Outliers were filtered using the **1.5× IQR rule** before modeling.
+
+### Customer Segmentation
+
+Multiple clustering approaches were explored:
+
+- K-means
+- Agglomerative Clustering
+- HDBSCAN
+
+The final solution used **K-means with four clusters**, producing four customer profiles:
+
+1. **Stable Consumers**
+2. **Churn-Risk Customers**
+3. **New-Potential Customers**
+4. **High-Frequency High-Value Customers**
+
+PCA was used to visualize the resulting customer segments.
+
+### Repurchase and Spending Analysis
+
+Linear regression and XGBoost were used to identify key drivers of:
+
+- Purchase amount
+- Repurchase behavior
+
+Three definitions of repurchase were compared:
+
+- Customers who purchased more than once
+- Repurchase within 365 days before the reference date
+- Repurchase within 365 days after the first purchase
+
+Important predictors included variables such as:
+
+- Purchase frequency
+- Recency
+- Membership level
+- Registration source
+- App installation
+- Email and SMS notification settings
+
+### LTV Modeling
+
+Customer Lifetime Value was modeled as:
+
+**LTV = Predicted Purchase Amount × Predicted Repurchase Probability**
+
+XGBoost was used for both regression and classification tasks.
+
+The resulting framework links customer segmentation with predictive modeling, allowing different marketing strategies to be designed for each customer segment.
+
+---
+
+## Repository Structure
+
+```text
+Big-Data-and-Business-Analytics/
+├── Customer-Segmentation-RFM-LTV-Prediction-Slides.pdf   # Final project: customer segmentation and LTV modeling
+├── Text-Based-Stock-Price-Prediction-Slides.pdf           # Midterm project: text-based stock movement prediction
+└── README.md
+```
+
+## Tech Stack
+
+`Python` · `Pandas` · `scikit-learn` · `XGBoost` · `K-means` · `PCA` · `TF-IDF` · `SVM` · `MLP` · `Keras` · `Llama-3.1-8B` · `Monpa`
+
+## Project Context
+
+**Big Data and Business Analytics, National Taiwan University**  
+Team Projects · Business Analytics · Customer Analytics · NLP · Machine Learning · Predictive Modeling
