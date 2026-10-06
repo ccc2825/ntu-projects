@@ -1,54 +1,94 @@
-# DonChiDon：智慧型熱量紀錄與客製化運動推薦系統
+# DonChiDon Calorie Tracker
 
-> **專案背景**：2023年 **Coding 101 程式設計競賽** 參賽作品  
-> **開發團隊**：國立臺灣大學經濟學系（闕蕎蓁、王乙軒、林冠綺、劉庭秀、李維宸）  
-> **專案文件**：[檢視競賽簡報 (PDF)](./DonChiDon-Calorie-Tracker-Coding101-Slides.pdf)
+A Python desktop application for tracking **daily calorie intake, exercise, and personalized calorie goals**, with built-in food matching and exercise recommendation features.
 
----
+## Overview
 
-## 專案摘要
+Tracking calories and exercise manually can be time-consuming, especially when users need to repeatedly calculate calorie intake, energy expenditure, and daily goals.
 
-DonChiDon 為一款基於 Python 桌面介面開發之健康管理系統，旨在簡化日常飲食熱量追蹤與運動規劃流程。傳統體態管理工具常因手動輸入繁瑣而降低使用者持續使用之意願。
+**DonChiDon** is a desktop calorie-tracking application designed to simplify this process. Users can enter personal information, record meals and exercise, review daily calorie summaries, and receive exercise recommendations based on the gap between their current calorie balance and target intake.
 
-本專案提供一體化之解決方案，整合 Python GUI、自動化食物文字相似度比對演算法、動態目標熱量估算，以及結合外部影音資源之客製化運動推薦機制。
+The application was built with a graphical interface to make calorie tracking more accessible and intuitive for everyday users.
 
----
+## Features
 
-## 核心系統功能
+### Personalized Calorie Analysis
 
-### 1. 個人化熱量與基礎代謝率估算
-* **生理指標運算**：依據使用者輸入之身高、體重、年齡與性別，自動計算身體質量指數（BMI）、基礎代謝率與每日總熱量消耗。
-* **動態目標設定**：根據使用者之體態管理目標（減重、維持、增重）與日常活動量，自動調配每日專屬目標熱量。
+Users enter basic information such as height, weight, age, gender, activity level, and weight-management goals.
 
-### 2. 兩層式食物相似度與熱量比對引擎
-* **自動熱量檢索**：使用者記錄飲食時，系統自動查詢內部資料庫。
-* **模糊字串比對演算法**：若無完全匹配之項目，系統啟動兩層式子字串重疊演算法計算相似度，自動推算最接近之熱量數值，並保留使用者手動覆寫之彈性。
+The application calculates:
 
-### 3. 基於規則之運動推薦機制
-* **熱量赤字與盈餘分析**：即時計算當前熱量攝取與每日目標之差距。
-* **智慧運動建議**：依據運動強度（輕度、中度、重度）與性別參數，隨機推薦三項運動，並確保至少包含一項居家或帕梅拉結構化運動。
-* **時長計算與影音整合**：若熱量超標，系統自動換算抵銷過量熱量所需之運動時長（自動轉換分/小時），並透過瀏覽器整合直接開啟對應之 YouTube 教學影片。
+- BMI and weight category
+- Basal Metabolic Rate (BMR)
+- Estimated daily calorie requirement
+- Personalized target calorie intake
 
-### 4. 資料視覺化、持久化保存與例外處理
-* **表格化摘要**：於可滾動介面中運用 `PrettyTable` 視覺化呈現每餐飲食與運動明細。
-* **狀態持久化**：利用檔案讀寫（`.txt` 與 `pandas`）將使用者個人資料與歷史紀錄保存於本機，支援重新啟動後自動載入先前狀態。
-* **輸入驗證與防呆機制**：建立完善之錯誤處理對話框，有效應對未輸入、非數字格式及無效操作，確保系統運行之穩定性。
+### Food Tracking
 
----
+Users can record meals by entering a food name and meal category.
 
-## 使用技術與套件
+If calorie information is not entered manually, the application searches an internal food dataset and:
 
-* **程式語言**：Python 3
-* **圖形介面與繪圖**：`tkinter` (Toplevel, Combobox, Scrollbar), `PIL (Pillow)`
-* **資料處理與表格化**：`pandas`, `prettytable`
-* **系統實用工具**：`os`, `base64`, `webbrowser`, `random`
+- returns an exact match when available
+- searches for partially matching food names
+- calculates similarity to select the closest available item
 
----
+Users can also enter calorie values manually when more accurate information is available.
 
-## 專案檔案結構
+### Exercise Tracking
 
-| 檔案名稱 | 說明 |
-|---|---|
-| `DonChiDon-Calorie-Tracker-Coding101-Slides.pdf` | Coding 101 競賽報告簡報檔 |
-| `README.md` | 本專案系統架構與說明文件 |
+Users can record:
 
+- Exercise type
+- Duration
+- Exercise intensity
+
+Exercise data are matched against an exercise database to estimate calories burned.
+
+### Exercise Recommendation
+
+Based on the difference between calorie intake, calories burned, and the user's target, the application recommends up to **three exercise options**.
+
+For supported exercises, users can also open related YouTube videos directly from the application.
+
+### Data Management
+
+The application supports:
+
+- Automatic saving of user records
+- Daily food and exercise summaries
+- Viewing remaining calories relative to the target
+- Deleting individual records
+- Clearing all records
+- Input validation and error messages
+
+## Implementation
+
+The application was developed primarily in **Python**.
+
+Key implementation components include:
+
+- **Tkinter** for the graphical user interface
+- **PrettyTable** for displaying food and exercise records
+- **Pandas** for reading structured food and exercise datasets
+- File I/O for saving and restoring user information
+- String-matching logic for identifying similar food items
+- Recommendation logic for suggesting exercises
+- `webbrowser` integration for opening exercise videos
+
+## Repository Structure
+
+```text
+Coding101-Calorie-Tracker-DonChiDon/
+├── DonChiDon-Calorie-Tracker-Coding101-Slides.pdf   # Project presentation and implementation details
+└── README.md
+```
+
+## Tech Stack
+
+`Python` · `Tkinter` · `Pandas` · `PrettyTable` · `PIL` · `File I/O` · `GUI Development`
+
+## Project Context
+
+**Coding101 Programming Competition / Project**  
+Team Project · Python Application · GUI Development · Health & Lifestyle
